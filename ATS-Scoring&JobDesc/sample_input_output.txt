@@ -1,0 +1,152 @@
+INPUT
+# Michael Chen
+## Software Engineer | Full-Stack Developer
+
+ Austin, TX |  (512) 555-0198 |  michael.chen@email.com  
+ linkedin.com/in/michaelchen |  github.com/mchen-dev
+
+
+## PROFESSIONAL SUMMARY
+Software Engineer with 7+ years of experience in full-stack development, system design, and cloud infrastructure. Proven track record of building scalable web applications, leading engineering teams, and improving product performance. Passionate about clean code, DevOps practices, and user-centered design.
+
+
+## TECHNICAL SKILLS
+- **Languages:** JavaScript, TypeScript, Python, Java, SQL, HTML/CSS
+- **Frameworks/Libraries:** React, Node.js, Express.js, Next.js, Spring Boot, Django
+- **Databases:** PostgreSQL, MongoDB, MySQL, Redis
+- **Cloud & DevOps:** AWS (EC2, S3, Lambda), Docker, Kubernetes, CI/CD (GitHub Actions, Jenkins), Terraform
+- **Tools:** Git, REST APIs, GraphQL, Jest, Webpack, Figma
+
+
+## WORK EXPERIENCE
+
+### Senior Software Engineer
+**TechSolutions Inc., Austin, TX**  
+*March 2020 – Present*
+
+- Led development of a microservices-based customer dashboard using React & Node.js, serving 50K+ active users.
+- Reduced API response time by 40% by optimizing database queries and implementing caching with Redis.
+- Mentored 3 junior developers and established code review & testing standards, improving team velocity by 25%.
+- Deployed and managed cloud infrastructure on AWS using Terraform & Docker, cutting monthly costs by 15%.
+
+### Software Engineer
+**InnovateSoft, San Francisco, CA**  
+*June 2016 – February 2020*
+
+- Developed and maintained front-end features for a SaaS platform using React & TypeScript, improving user engagement by 30%.
+- Built RESTful APIs with Python/Django, integrating third-party payment and analytics services.
+- Implemented CI/CD pipelines with Jenkins, reducing deployment time from 2 hours to 15 minutes.
+- Collaborated with UX/UI designers to create responsive and accessible web components.
+
+
+## EDUCATION
+
+### Master of Science in Computer Science
+**Stanford University, Stanford, CA**  
+*Graduated: May 2016*
+
+### Bachelor of Science in Software Engineering
+**University of Texas at Austin, Austin, TX**  
+*Graduated: May 2014*
+
+
+## CERTIFICATIONS
+- AWS Certified Solutions Architect – Associate (2023)
+- Scrum Master Certified (SMC, 2021)
+
+
+## PROJECTS
+
+### TaskFlow Pro – Productivity App
+- Built a full-stack task management app with React, Node.js, and PostgreSQL.
+- Implemented real-time updates using Socket.io and deployed on AWS Elastic Beanstalk.
+- **[GitHub](https://github.com/mchen-dev/taskflow)** | **[Live Demo](https://taskflow.demo.com)**
+
+### HealthTrack API – Healthcare Data Service
+- Developed a secure REST API for patient data management using Spring Boot & MySQL.
+- Integrated OAuth 2.0 for authentication and deployed with Docker on Google Cloud.
+- **[GitHub](https://github.com/mchen-dev/healthtrack-api)**
+
+
+
+
+
+
+
+
+
+
+
+
+
+OUTPUT
+{
+  "resume_extracted": {
+    "skills": {
+      "detected": [
+        "software engineer",
+        "web applications",
+        "backend systems",
+        "rest apis",
+        "cloud infrastructure",
+        "data processing",
+        "python",
+        "javascript",
+        "react",
+        "node js",
+        "docker",
+        "aws"
+      ],
+      "confidence": 0.55
+    },
+    "projects": [
+      "developed scalable backend services",
+      "built web applications using react",
+      "implemented ci cd pipelines",
+      "designed restful apis"
+    ],
+    "experience": {
+      "estimated_years": 3,
+      "confidence": "high"
+    }
+  },
+
+  "job_description": "Senior Software Engineer role focusing on scalable systems, cloud technologies, and modern web frameworks...",
+
+  "semantic_similarity": {
+    "resume_job": 0.82,
+    "resume_github": 0.76
+  },
+
+  "ats_score": {
+    "value": 79.3,
+    "confidence": "high"
+  }
+}
+ "crew_ai_analysis": {
+    "recruiter_view": {
+      "verdict": "Strong technical alignment for backend-focused roles",
+      "risk": "Experience slightly below senior expectations",
+      "hire_probability": "high"
+    },
+
+    "ats_optimizer_agent": {
+      "what_helped": [
+        "Strong semantic alignment with job description",
+        "Experience matches real-world GitHub engineering language"
+      ],
+      "what_hurt": [
+        "Limited explicit leadership indicators",
+        "Some skills inferred rather than stated"
+      ]
+    },
+
+    "resume_coach_agent": {
+      "top_improvements": [
+        "Add 1–2 quantified achievements",
+        "Explicitly name leadership or ownership responsibilities",
+        "Add a short project summary section"
+      ],
+      "estimated_score_after_changes": 88
+    }
+  }
