@@ -1,61 +1,67 @@
-import jobspy
 from jobspy import scrape_jobs
-import pandas as pd
-import sqlite3
-import time
+from pymongo import MongoClient
 from datetime import datetime
+import time
+SITE_NAMES = ["indeed", "linkedin", "google", "zip_recruiter"]
 
 SEARCH_TERMS = [
+    "software engineer",
     "data analyst",
     "data scientist",
     "machine learning engineer",
-    "business analyst",
-    "software engineer"
+    "backend developer",
+    "frontend developer",
 ]
 
-LOCATION = "United States"
-SITE = ["indeed"]
+COUNTRIES = {
+    "USA": ["New York, NY", "San Francisco, CA", "Austin, TX"],
+    "UK": ["London", "Manchester"],
+    "IN": ["Bangalore", "Hyderabad", "Delhi"],
+    "CA": ["Toronto", "Vancouver"],
+    "AU": ["Sydney", "Melbourne"],
+    "DE": ["Berlin", "Munich"],
+}
 
-RESULTS_PER_BATCH = 100
-MAX_BATCHES = 20
-SLEEP_SECONDS = 3
+RESULTS_WANTED = 25
+HOURS_OLD = 72
+SLEEP_SECONDS = 5
+# MONGODB
+client = MongoClient("mongodb://localhost:27017")
+db = client["jobspy"]
+raw_jobs = db["raw_jobs"]
 
-DB_NAME = "jobs.db"
-RAW_TABLE = "raw_jobs"
+# SCRAPING LOOP
+for country, locations in COUNTRIES.items():
+    for location in locations:
+        for term in SEARCH_TERMS:
+            print(f"\n {country} |  {location} |  {term}")
 
-conn = sqlite3.connect(DB_NAME)
+            google_search_term = f"{term} jobs in {location}"
 
-for term in SEARCH_TERMS:
-    print(f"\n Scraping: {term}")
+            jobs_df = scrape_jobs(
+                site_name=SITE_NAMES,
+                search_term=term,
+                google_search_term=google_search_term,
+                location=location,
+                results_wanted=RESULTS_WANTED,
+                hours_old=HOURS_OLD,
+                country_indeed=country
+            )
 
-    for batch in range(MAX_BATCHES):
-        print(f"  Batch {batch + 1}")
+            if jobs_df is None or jobs_df.empty:
+                print(" No jobs found")
+                continue
 
-        jobs_df = scrape_jobs(
-            site_name=SITE,
-            search_term=term,
-            location=LOCATION,
-            results_wanted=RESULTS_PER_BATCH,
-            hours_old=24 * (batch + 1)
-        )
+            records = jobs_df.to_dict(orient="records")
 
-        if jobs_df is None or jobs_df.empty:
-            print(" No more jobs.")
-            break
+            for job in records:
+                job["search_term"] = term
+                job["country"] = country
+                job["location_query"] = location
+                job["scraped_at"] = datetime.utcnow()
 
-        df = jobs_df.copy()
-        df["search_term"] = term
-        df["scraped_at"] = datetime.utcnow().isoformat()
+            raw_jobs.insert_many(records)
+            print(f" Inserted {len(records)} jobs")
 
-        df.to_sql(
-            RAW_TABLE,
-            conn,
-            if_exists="append",
-            index=False
-        )
+            time.sleep(SLEEP_SECONDS)
 
-        print(f" Saved {len(df)} raw jobs")
-        time.sleep(SLEEP_SECONDS)
-
-conn.close()
-print("\n Raw scraping completed.")

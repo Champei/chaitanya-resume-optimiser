@@ -1,44 +1,14 @@
-import sqlite3
-import pandas as pd
+from pymongo import MongoClient
+from datetime import datetime
 import re
 
-DB_NAME = "jobs.db"
-RAW_TABLE = "raw_jobs"
-CLEAN_TABLE = "clean_jobs"
+client = MongoClient("mongodb://localhost:27017")
+db = client["jobspy"]
 
-conn = sqlite3.connect(DB_NAME)
+raw_col = db["raw_jobs"]
+clean_col = db["clean_jobs"]
 
-df = pd.read_sql(f"SELECT * FROM {RAW_TABLE}", conn)
-print(f"Loaded {len(df)} raw rows")
-
-if df.empty:
-    print("No data found")
-    conn.close()
-    exit()
-
-critical_cols = ["title", "company", "description"]
-existing_critical = [c for c in critical_cols if c in df.columns]
-df = df.dropna(subset=existing_critical)
-
-for col in ["title", "company", "location"]:
-    if col in df.columns:
-        df[col] = (
-            df[col]
-            .astype(str)
-            .str.strip()
-            .str.lower()
-        )
-
-df["description"] = (
-    df["description"]
-    .astype(str)
-    .str.replace(r"\s+", " ", regex=True)
-)
-
-if "date_posted" in df.columns:
-    df["date_posted"] = pd.to_datetime(
-        df["date_posted"], errors="coerce"
-    ).dt.date.astype(str)
+clean_col.delete_many({})
 
 def parse_salary(s):
     if not isinstance(s, str):
@@ -53,25 +23,50 @@ def parse_salary(s):
         return min(nums), max(nums)
     return None, None
 
-if "salary" in df.columns:
-    df["salary_min"], df["salary_max"] = zip(
-        *df["salary"].apply(parse_salary)
+# CLEANING LOOP
+inserted = 0
+seen = set()  
+
+for job in raw_col.find():
+    title = job.get("title")
+    company = job.get("company")
+    description = job.get("description")
+
+    if not title or not company or not description:
+        continue
+
+    # NORMALIZATION
+    job["title"] = title.strip().lower()
+    job["company"] = company.strip().lower()
+    job["location"] = job.get("location", "").strip().lower()
+
+    job["description"] = re.sub(r"\s+", " ", description)
+
+    # DATE NORMALIZATION
+    if "date_posted" in job:
+        job["date_posted_clean"] = str(job["date_posted"])
+
+    if "salary" in job:
+        job["salary_min"], job["salary_max"] = parse_salary(job["salary"])
+    else:
+        job["salary_min"] = None
+        job["salary_max"] = None
+
+    job["cleaned_at"] = datetime.utcnow()
+
+    # DEDUPLICATION
+    dedup_key = (
+        job.get("title"),
+        job.get("company"),
+        job.get("location"),
+        job.get("country"),
     )
-else:
-    df["salary_min"] = None
-    df["salary_max"] = None
 
-dedup_keys = [c for c in ["title", "company", "location"] if c in df.columns]
-df = df.drop_duplicates(subset=dedup_keys)
+    if dedup_key in seen:
+        continue
 
-print(f"After cleaning: {len(df)} rows")
+    seen.add(dedup_key)
 
-df.to_sql(
-    CLEAN_TABLE,
-    conn,
-    if_exists="replace",  
-    index=False
-)
+    clean_col.insert_one(job)
+    inserted += 1
 
-conn.close()
-print(" Clean data saved ")
