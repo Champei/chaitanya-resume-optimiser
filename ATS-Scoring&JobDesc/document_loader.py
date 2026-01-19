@@ -1,14 +1,38 @@
-from pypdf import PdfReader
-from docx import Document
-import io
+from pathlib import Path
+import pdfplumber
+import docx
 
-def load_resume(file_bytes: bytes, filename: str) -> str:
-    if filename.endswith(".pdf"):
-        reader = PdfReader(io.BytesIO(file_bytes))
-        return "\n".join(page.extract_text() or "" for page in reader.pages)
 
-    if filename.endswith(".docx"):
-        doc = Document(io.BytesIO(file_bytes))
-        return "\n".join(p.text for p in doc.paragraphs)
+class DocumentLoader:
+    def load(self, file_path: str) -> str:
+        path = Path(file_path)
 
-    raise ValueError("Unsupported file format")
+        if not path.exists():
+            raise FileNotFoundError(f"File not found: {file_path}")
+
+        suffix = path.suffix.lower()
+
+        if suffix == ".pdf":
+            return self._load_pdf(path)
+        elif suffix == ".docx":
+            return self._load_docx(path)
+        elif suffix == ".txt":
+            return self._load_txt(path)
+        else:
+            raise ValueError(f"Unsupported file type: {suffix}")
+
+    def _load_pdf(self, path: Path) -> str:
+        text = []
+        with pdfplumber.open(path) as pdf:
+            for page in pdf.pages:
+                page_text = page.extract_text()
+                if page_text:
+                    text.append(page_text)
+        return "\n".join(text)
+
+    def _load_docx(self, path: Path) -> str:
+        doc = docx.Document(path)
+        return "\n".join(p.text for p in doc.paragraphs if p.text.strip())
+
+    def _load_txt(self, path: Path) -> str:
+        return path.read_text(encoding="utf-8", errors="ignore")
