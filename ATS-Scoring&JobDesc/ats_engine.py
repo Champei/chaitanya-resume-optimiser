@@ -9,7 +9,7 @@ nlp = spacy.load("en_core_web_lg")
 embedder = SentenceTransformer("all-MiniLM-L6-v2")
 
 
-class ATSEngine:
+class ATSSystem:
     def __init__(self):
         self.github_text = load_github_corpus_text()
 
@@ -59,7 +59,6 @@ class ATSEngine:
             "confidence": "high"
         }
     # Semantic similarity
-
 
     def semantic_similarity(self, a: str, b: str) -> float:
         if not a.strip() or not b.strip():

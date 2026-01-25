@@ -1,14 +1,15 @@
-INPUT
 # Michael Chen
 ## Software Engineer | Full-Stack Developer
 
- Austin, TX |  (512) 555-0198 |  michael.chen@email.com  
- linkedin.com/in/michaelchen |  github.com/mchen-dev
+ Austin, TX | (512) 555-0198 |  michael.chen@email.com  
+ linkedin.com/in/michaelchen | github.com/mchen-dev
 
+---
 
 ## PROFESSIONAL SUMMARY
 Software Engineer with 7+ years of experience in full-stack development, system design, and cloud infrastructure. Proven track record of building scalable web applications, leading engineering teams, and improving product performance. Passionate about clean code, DevOps practices, and user-centered design.
 
+---
 
 ## TECHNICAL SKILLS
 - **Languages:** JavaScript, TypeScript, Python, Java, SQL, HTML/CSS
@@ -17,6 +18,7 @@ Software Engineer with 7+ years of experience in full-stack development, system 
 - **Cloud & DevOps:** AWS (EC2, S3, Lambda), Docker, Kubernetes, CI/CD (GitHub Actions, Jenkins), Terraform
 - **Tools:** Git, REST APIs, GraphQL, Jest, Webpack, Figma
 
+---
 
 ## WORK EXPERIENCE
 
@@ -38,6 +40,7 @@ Software Engineer with 7+ years of experience in full-stack development, system 
 - Implemented CI/CD pipelines with Jenkins, reducing deployment time from 2 hours to 15 minutes.
 - Collaborated with UX/UI designers to create responsive and accessible web components.
 
+---
 
 ## EDUCATION
 
@@ -49,11 +52,13 @@ Software Engineer with 7+ years of experience in full-stack development, system 
 **University of Texas at Austin, Austin, TX**  
 *Graduated: May 2014*
 
+---
 
 ## CERTIFICATIONS
 - AWS Certified Solutions Architect – Associate (2023)
 - Scrum Master Certified (SMC, 2021)
 
+---
 
 ## PROJECTS
 
@@ -66,87 +71,3 @@ Software Engineer with 7+ years of experience in full-stack development, system 
 - Developed a secure REST API for patient data management using Spring Boot & MySQL.
 - Integrated OAuth 2.0 for authentication and deployed with Docker on Google Cloud.
 - **[GitHub](https://github.com/mchen-dev/healthtrack-api)**
-
-
-
-
-
-
-
-
-
-
-
-
-
-OUTPUT
-{
-  "resume_extracted": {
-    "skills": {
-      "detected": [
-        "software engineer",
-        "web applications",
-        "backend systems",
-        "rest apis",
-        "cloud infrastructure",
-        "data processing",
-        "python",
-        "javascript",
-        "react",
-        "node js",
-        "docker",
-        "aws"
-      ],
-      "confidence": 0.55
-    },
-    "projects": [
-      "developed scalable backend services",
-      "built web applications using react",
-      "implemented ci cd pipelines",
-      "designed restful apis"
-    ],
-    "experience": {
-      "estimated_years": 3,
-      "confidence": "high"
-    }
-  },
-
-  "job_description": "Senior Software Engineer role focusing on scalable systems, cloud technologies, and modern web frameworks...",
-
-  "semantic_similarity": {
-    "resume_job": 0.82,
-    "resume_github": 0.76
-  },
-
-  "ats_score": {
-    "value": 79.3,
-    "confidence": "high"
-  }
-}
- "crew_ai_analysis": {
-    "recruiter_view": {
-      "verdict": "Strong technical alignment for backend-focused roles",
-      "risk": "Experience slightly below senior expectations",
-      "hire_probability": "high"
-    },
-
-    "ats_optimizer_agent": {
-      "what_helped": [
-        "Strong semantic alignment with job description",
-        "Experience matches real-world GitHub engineering language"
-      ],
-      "what_hurt": [
-        "Limited explicit leadership indicators",
-        "Some skills inferred rather than stated"
-      ]
-    },
-
-    "resume_coach_agent": {
-      "top_improvements": [
-        "Add 1–2 quantified achievements",
-        "Explicitly name leadership or ownership responsibilities",
-        "Add a short project summary section"
-      ],
-      "estimated_score_after_changes": 88
-    }
-  }
