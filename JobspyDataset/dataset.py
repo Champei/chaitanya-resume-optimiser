@@ -1,8 +1,10 @@
 from jobspy import scrape_jobs
 from pymongo import MongoClient
-from datetime import datetime
+from datetime import date, datetime
 import time
-SITE_NAMES = ["indeed", "linkedin", "google", "zip_recruiter"]
+
+# CONFIG
+SITE_NAMES = ["indeed", "linkedin", "zip_recruiter"]  
 
 SEARCH_TERMS = [
     "software engineer",
@@ -14,22 +16,35 @@ SEARCH_TERMS = [
 ]
 
 COUNTRIES = {
-    "USA": ["New York, NY", "San Francisco, CA", "Austin, TX"],
-    "UK": ["London", "Manchester"],
-    "IN": ["Bangalore", "Hyderabad", "Delhi"],
-    "CA": ["Toronto", "Vancouver"],
-    "AU": ["Sydney", "Melbourne"],
-    "DE": ["Berlin", "Munich"],
+    "united states": ["New York, NY", "San Francisco, CA", "Austin, TX"],
+    "united kingdom": ["London", "Manchester"],
+    "india": ["Bangalore", "Hyderabad", "Delhi"],
+    "canada": ["Toronto", "Vancouver"],
+    "australia": ["Sydney", "Melbourne"],
+    "germany": ["Berlin", "Munich"],
 }
 
 RESULTS_WANTED = 25
 HOURS_OLD = 72
 SLEEP_SECONDS = 5
+
 # MONGODB
+
 client = MongoClient("mongodb://localhost:27017")
 db = client["jobspy"]
 raw_jobs = db["raw_jobs"]
 
+def remove_datetime(obj):
+    if isinstance(obj, dict):
+        return {
+            k: remove_datetime(v)
+            for k, v in obj.items()
+            if not isinstance(v, (datetime, date))
+        }
+    elif isinstance(obj, list):
+        return [remove_datetime(v) for v in obj]
+    else:
+        return obj
 # SCRAPING LOOP
 for country, locations in COUNTRIES.items():
     for location in locations:
@@ -58,10 +73,12 @@ for country, locations in COUNTRIES.items():
                 job["search_term"] = term
                 job["country"] = country
                 job["location_query"] = location
-                job["scraped_at"] = datetime.utcnow()
 
-            raw_jobs.insert_many(records)
-            print(f" Inserted {len(records)} jobs")
+            clean_records = [remove_datetime(job) for job in records]
+
+            raw_jobs.insert_many(clean_records)
+            print(f" Inserted {len(clean_records)} jobs")
 
             time.sleep(SLEEP_SECONDS)
 
+print("\n Scraping completed successfully")
