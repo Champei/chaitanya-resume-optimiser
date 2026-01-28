@@ -5,6 +5,8 @@ import time
 import os
 import json
 from openai import OpenAI
+import time
+from openai import RateLimitError
 
 SITE_NAMES = ["indeed", "linkedin", "zip_recruiter"]
 
@@ -109,21 +111,26 @@ Job Description:
 \"\"\"
 """
 
+def extract_with_llm(description, retries=5):
+    for attempt in range(retries):
+        try:
+            response = llm.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=[
+                    {"role": "system", "content": "Extract structured job information as JSON."},
+                    {"role": "user", "content": description}
+                ],
+                temperature=0
+            )
+            return response.choices[0].message.content
 
-def extract_with_llm(description: str) -> dict | None:
-    response = llm.chat.completions.create(
-        model=LLM_MODEL,
-        temperature=0,
-        messages=[
-            {"role": "system", "content": SYSTEM_PROMPT},
-            {"role": "user", "content": build_prompt(description)},
-        ],
-    )
+        except RateLimitError:
+            wait = 20 * (attempt + 1)
+            print(f" Rate limited. Sleeping {wait}s")
+            time.sleep(wait)
 
-    try:
-        return json.loads(response.choices[0].message.content)
-    except Exception:
-        return None
+    return None
+
 
 for country, locations in COUNTRIES.items():
     for location in locations:
